@@ -1,9 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('/database/staff_tracker');
-// import Sequelize from "staff_tracker";
 
 module.exports = sequelize.define("departments", {
-
     id: {
         type: Sequelize.INTEGER,
         allowNULL: false,
@@ -17,3 +15,5 @@ module.exports = sequelize.define("departments", {
         allowNULL: false,
     },
 });
+
+return Department;
