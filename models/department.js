@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const sequelize = require('/database/staff_tracker');
+const sequelize = require('./database/management_db');
 
 module.exports = sequelize.define("departments", {
     id: {
