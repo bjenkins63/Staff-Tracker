@@ -1,12 +1,13 @@
+const Sequelize = require('sequelize');
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 const cTable = require('console.table');
 
 
 //connect to db
-const db = mysql.createConnection({
+const connection = mysql.createConnection({
   user: "root",
-  host: "localhost",
+  host: "127.0.0.1",
   PORT: 8000,
   password: "root",
   database: "management_db",
@@ -14,8 +15,9 @@ const db = mysql.createConnection({
 
 connection.connect((err) => {
     if (err) throw err;
-    runSearch();
-  });
+    console.log("connection to database successful.\n");
+    uiPrompt();
+});
 
 //view all employees
 async function viewAllEmployees () {
@@ -434,8 +436,3 @@ async function primary () {
         }
     }
 }
-
-//terminate database connection
-process.on("exit", asyc (x) => {
-
-})
