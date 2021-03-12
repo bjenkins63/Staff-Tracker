@@ -61,7 +61,7 @@ async function acquireDepartmentInfo (departmentInfo) {
 }
 
 //get employee names
-async function aquireEmployeeRoster () {
+async function acquireEmployeeRoster () {
     const query = `SELECT * FROM employee`;
     const rows = await connection.query(query);
     let name = [];
@@ -91,7 +91,6 @@ async function obtainRoles () {
         roles.push(row.role)
     }
     return roles;
-
 };
 
 //view all roles
@@ -149,16 +148,6 @@ async function obtainEmployeesByDepartment () {
 };
 
 
-//get role ID
-async function obtainRoleID (roleName) {
-    const query = `SELECT id FROM role WHERE role.role = ?`
-    const args = [roleName];
-    const rows = await connection.query(query, args);
-            return rows[0].id
-
-};
-
-
 //get department names
 async function obtainDepartmentNames () {
     const query = `SELECT name FROM department`;
@@ -170,8 +159,6 @@ async function obtainDepartmentNames () {
     }
     return departments
 };
-
-
 
 //get employee ID
 async function obtainEmployeeId (employeeName) {
@@ -290,7 +277,7 @@ async function addEmployee () {
 
 //delete employee
 
-async function deleteEmployee () {
+async function slashHire () {
     const employees = await acquireEmployeeRoster();
     return inquirer.prompt([
         {
@@ -342,7 +329,7 @@ async function addDepartment () {
 
 
 //add role
-async function addNewRole () {
+async function addRole () {
     const depts = await obtainDepartmentNames();
     console.log(depts)
     return inquirer.prompt ([
