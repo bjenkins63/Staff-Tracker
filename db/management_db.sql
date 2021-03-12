@@ -4,7 +4,7 @@ CREATE database management_db;
 USE management_db;
 
 CREATE TABLE department {
-    id INTEGER(11) AUTO_INCREMENT NOT NULL,
+    id INTEGER(11) AUTO_INCREMENT NOT NULL
     name varchar(30),
     PRIMARY KEY (id)
     };
