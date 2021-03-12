@@ -8,7 +8,6 @@ class Database {
         this.connection = mysql.createConnection(config);
     }
 //constructor creates a new mysql connection with this config
-
     query(sql, args) {
         return new Promise ((resolve, reject) => {
             this.connection.query(sql, args, (error, rows) => {

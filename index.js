@@ -1,16 +1,7 @@
-const express = require("express");
-const cors = require("cors");
+const inquirer = require("inquirer");
 const mysql = require("mysql2");
-const Departments = require('./models/department');
-const Role = require('./models/role');
-const Employee = require('./models/employee');
-// const { connection, modelNames } = require("mongoose");
 const cTable = require('console.table');
 
-let app = express();
-
-app.use(cors());
-app.use(express.json());
 
 //connect to db
 const db = mysql.createConnection({
@@ -20,6 +11,11 @@ const db = mysql.createConnection({
   password: "root",
   database: "management_db",
 });
+
+connection.connect((err) => {
+    if (err) throw err;
+    runSearch();
+  });
 
 //view all employees
 async function viewAllEmployees () {
@@ -229,7 +225,6 @@ async function insertEmployee (employee) {
         });
 };
 
-
 //remove employee
 async function slashHire (employeeName) {
     console.log(employeeName)
@@ -240,8 +235,6 @@ async function slashHire (employeeName) {
     await connection.query(query, [firstName, lastName]);
     console.log(`${firstName} ${lastName} successfully removed.`);
 };
-
-
 
 //function list CLI user
 async function uiPrompt() {
@@ -308,8 +301,6 @@ async function acquireSlashHireInfo () {
         }
     ]);
 };
-
-
 
 //update employee role
 async function updateEmployeeRole () {

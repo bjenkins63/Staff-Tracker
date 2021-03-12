@@ -1,23 +1,15 @@
-const mysql = require('mysql2c');
-const util = require('util');
+const Sequelize = require('sequelize');
 
-const connection = createConnection({
-    host: "localhost", 
-    port: 8000,
-    user: "root", 
-    password: "root",
-    database: "management_db",
-});
+// Create a connection object
+const sequelize = new Sequelize(
+  'management_db',
+  'root',
+  'root',
+  {
+    host: 'localhost',
+    dialect: 'mysql',
+    port: 8000
+  }
+);
 
-
-//connect to server
-
-
-connection.connect((err) => {
-    if (err) throw err;});
-
-connection.query = util.promisify(connection.query).bind(connection);
-
-
-module.exports = connection;
-
+module.exports = sequelize;

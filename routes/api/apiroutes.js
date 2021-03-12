@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../models");
+const db = require("../../models");
 
 // get all departments
 router.get("/all", (req, res) => {
@@ -20,7 +20,7 @@ router.get("/find/:id", (req, res) => {
 router.post("/new", (req, res) => {
   db.Department.create({
     text: req.body.text
-  }).then(submitedTodo => res.send(department));
+  }).then(() => res.send(department));
 });
 
 // delete department
