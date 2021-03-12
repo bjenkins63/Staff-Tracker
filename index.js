@@ -274,9 +274,7 @@ async function addEmployee () {
     ])
 };
 
-
 //delete employee
-
 async function slashHire () {
     const employees = await acquireEmployeeRoster();
     return inquirer.prompt([
@@ -292,7 +290,6 @@ async function slashHire () {
 };
 
 //update employee role
-
 async function updateEmployeeRole () {
     const roster = await acquireEmployeeRoster();
     const roles = await obtainRoles();
@@ -327,7 +324,6 @@ async function addDepartment () {
     ])
 };
 
-
 //add role
 async function addRole () {
     const depts = await obtainDepartmentNames();
@@ -350,7 +346,7 @@ async function addRole () {
 
 }
 
-async function viewOptions () {
+async function uiPrompt () {
         const prompt = await uiPrompt();
         switch(prompt.action.toLowerCase()) {
 
@@ -413,5 +409,5 @@ async function viewOptions () {
 connection.connect((err) => {
     if (err) throw err;
     // run the start function after the connection is made to prompt the user
-    start();
+    uiPrompt();
   });

@@ -1,5 +1,5 @@
-const Sequelize = require('sequelize');
-const sequelize = require('./database/management_db');
+import Sequelize from "sequelize";
+const sequelize = require('./db/management_db');
 
 module.exports = sequelize.define("departments", {
     id: {

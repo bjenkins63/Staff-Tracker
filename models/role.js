@@ -1,5 +1,5 @@
 import Sequelize from "sequelize";
-const sequelize = require('./database/management_db');
+const sequelize = require('./db/management_db');
 
 module.exports = sequelize.define("roles", {
 
