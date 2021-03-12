@@ -1,13 +1,13 @@
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
-const cTable = require('console.table');
+const cTable = require("console.table");
 
 
 //connect to db
 const connection = mysql.createConnection({
   user: "root",
-  host: "127.0.0.1",
+  host: "localhost",
   PORT: 3306,
   password: "root",
   database: "management_db",
@@ -290,7 +290,7 @@ async function addEmployee () {
 
 //delete employee
 
-async function acquireSlashHireInfo () {
+async function deleteEmployee () {
     const employees = await acquireEmployeeRoster();
     return inquirer.prompt([
         {
@@ -305,6 +305,7 @@ async function acquireSlashHireInfo () {
 };
 
 //update employee role
+
 async function updateEmployeeRole () {
     const roster = await acquireEmployeeRoster();
     const roles = await obtainRoles();
@@ -341,7 +342,7 @@ async function addDepartment () {
 
 
 //add role
-async function obtainRoleInfo () {
+async function addNewRole () {
     const depts = await obtainDepartmentNames();
     console.log(depts)
     return inquirer.prompt ([
@@ -352,7 +353,7 @@ async function obtainRoleInfo () {
         },
         {
             type: "input",
-            message: "Enter salery of new role (NO COMMAS): ",
+            message: "which department will this role be in?",
             name: "departmentName",
             choices: [
                 ...depts
@@ -362,69 +363,55 @@ async function obtainRoleInfo () {
 
 }
 
-
-
-async function primary () {
-    let terminateCircuito = false
-    while(!terminateCircuito) {
+async function viewOptions () {
         const prompt = await uiPrompt();
         switch(prompt.action.toLowerCase()) {
 
             case "view all employees": {
                 await viewAllEmployees();
-                break;
-            }
+                break;}
 
             case "view all employees by department": {
                 await obtainEmployeesByDepartment();
-                break;
-            }
+                break;}
 
             case "view details for all employees": {
                 await viewAllEmployeesDetails();
-                break;
-            }
+                break;}
 
             case "view all department": {
                 await obtainAllDepartments();
-                break;
-            }
+                break;}
 
             case "view all roles": {
                 await obtainAllRoles();
-                break;
-            }
+                break;}
 
             case "add employee": {
                 const newHire = await addEmployee();
                 console.log(newHire);
                 await insertEmployee(newHire);
-                break;
-            }
+                break;}
 
             case "remove employee": {
                 const newHire = await ascquireSlashHireInfo();
                 await slashHire(eject);
-                break;
-            }
+                break;}
 
             case "update employee role": {
                 const updateRole = await updateEmployeeRole();
                 await updateEmpRole(updateRole);
-                break;
-            }
+                break;}
 
             case "add department": {
                 const departmentAdd = await addDepartment();
                 await acquireDepartmentInfo(departmentAdd);
-                break;
-            }
+                break;}
 
             case "add role": {
                 const newHire = await addRole();
                 await insertEmployee(roleAdd);
-                break;
-            }
+                break;}
 
             case "exit": {
                 terminateCircuito = true;
@@ -435,4 +422,3 @@ async function primary () {
                 break;
         }
     }
-}

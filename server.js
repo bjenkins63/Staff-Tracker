@@ -8,6 +8,6 @@ app.use(express.json());
 
 db.sequelize.sync().then(() => {
     app.listen(port, () => {
-        console.log(`listening on port ${PORT}`);
+        console.log(`listening on port ${port}`);
     })
 })
