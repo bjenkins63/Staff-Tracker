@@ -1,9 +1,14 @@
-import Sequelize from "sequelize";
-const sequelize = require('./db/management_db');
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../config/connection');
 
-module.exports = sequelize.define("departments", {
+class Department extends Model {}
+
+// create fields/columns for Location model
+Department.init(
+    
+    {
     id: {
-        type: Sequelize.INTEGER,
+        type: DataTypes.INTEGER,
         allowNULL: false,
         autoIncrement: true,
         primaryKey: true,
@@ -11,9 +16,18 @@ module.exports = sequelize.define("departments", {
     },
 
     name: {
-        type: varchar(20),
+        type: DataTypes.STRING,
         allowNULL: false,
-    },
-});
+    }
+},
 
-return Department;
+    {
+        sequelize: sequelize,
+        timestamps: false,
+        freezeTableName: true,
+        underscored: true,
+        modelName: 'department'
+      }
+    );
+    
+    module.exports = Department;

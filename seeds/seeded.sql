@@ -3,15 +3,15 @@ USE management_db;
 INSERT INTO department (name)
 VALUES ('Engineering'), ('Finance'), ('Legal'), ('Sales');
 
-INSERT INTO role (role, salary, department_id)
+INSERT INTO role (title, salary, department_id)
 VALUES ('Lead Software Engineer', 240000, 1),
 ('Software Engineer', 190000, 1);
-INSERT INFO role (role, salary, department_id)
+INSERT INFO role (title, salary, department_id)
 VALUES ('Accountant', 170000, 2);
 INSERT INTO role (role, salary, department_id)
 VALUES('Lawyer', 200000, 3),
 ('Lead Lawyer', 300000, 3);
-INSERT INTO role (role, salary, department_id)
+INSERT INTO role (title, salary, department_id)
 VALUES ('Salesperson', 90000, 4),
 ('Lead Salesperson', 120000, 4);
 

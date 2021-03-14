@@ -1,10 +1,12 @@
-import Sequelize from "sequelize";
-const sequelize = require('./db/management_db');
+const { DataTypes, Model } = require("sequelize");
+const sequelize = require('../config/connection');
 
-module.exports = sequelize.define("employees", {
+class Employee extends Model {}
 
-    employee_id: {
-        type: Sequelize.INTEGER,
+Employee.init(
+    {
+    id: {
+        type: DataTypes.INTEGER,
         allowNULL: false,
         autoIncrement: true,
         primaryKey: true,
@@ -12,22 +14,41 @@ module.exports = sequelize.define("employees", {
     },
 
     first_name: {
-        type: Sequelize.STRING(20),
+        type: DataTypes.STRING,
         allowNULL: false,
     },
 
     last_name: {
-        type: Sequelize.STRING(20),
+        type: DataTypes.STRING,
         allowNULL: false,
     },
 
     role_id: {
-        type: Sequelize.INTEGER,
-        allowNULL: false,
+        type: DataTypes.INTEGER,
+        allowNULL: false,      
+        // references: {
+        //     model: 'role',
+        //     key: 'role_id',
+        //     unique: false
+        // }
     },
+    department_id: {
+        type: DataTypes.INTEGER,
+        allowNULL: true,      
+        // references: {
+        //     model: 'department',
+        //     key: 'department_id',
+        //     unique: false
+        // }
+    }
+    },  
+{
+    sequelize: sequelize,
+    timestamps: false,
+    freezeTableName: true,
+    underscored: true,
+    modelName: 'employee'
+  }
+);
 
-    manager_id: {
-        type: Sequelize.INTEGER,
-        allowNULL: true,
-    },
-});
+module.exports = Employee;

@@ -3,20 +3,6 @@ CREATE database management_db;
 
 USE management_db;
 
-CREATE TABLE department {
-    id INTEGER(11) AUTO_INCREMENT NOT NULL
-    name varchar(30),
-    PRIMARY KEY (id)
-    };
-
-CREATE TABLE role {
-    id INTEGER(11) AUTO_INCREMENT NOT NULL,
-    role varchar(30),
-    salary DECIMAL(12,4),
-    department_id INT NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (department_id) REFERENCES department(id)
-    };
 
 CREATE TABLE employee {
     id INTEGER(11) AUTO_INCREMENT NOT NULL,
@@ -28,9 +14,24 @@ CREATE TABLE employee {
     FOREIGN KEY(role_id) REFERENCES role(id),
     FOREIGN KEY(manager_id) REFERENCES role(id));
 
+
+CREATE TABLE role {
+    id INTEGER(11) AUTO_INCREMENT NOT NULL,
+    role varchar(30),
+    salary DECIMAL(12,4),
+    department_id INT NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (department_id) REFERENCES department(id)
+    };
+
+CREATE TABLE department {
+    id INTEGER(11) AUTO_INCREMENT NOT NULL
+    name varchar(30),
+    PRIMARY KEY (id)
+    };
+
     
 
-SELECT * FROM department;
-SELECT * FROM role;
 SELECT * FROM employee;
-
+SELECT * FROM role;
+SELECT * FROM department;
