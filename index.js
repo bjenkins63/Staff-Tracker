@@ -73,7 +73,7 @@ inquirer
 
         case "update employee role": {
             const updateRole = await updateEmployeeRole();
-            await updateEmpRole(updateRole);
+            await updateEmployeeRole(updateRole);
             break;}
 
         case "add department": {
@@ -97,6 +97,16 @@ inquirer
     });
 };
 
+//view all employees
+async function viewAllEmployees () {
+    const query = 'SELECT * FROM employee';
+    const rows = await connection.promise().query(query);
+    console.table(rows[0])
+    return Promise.resolve();
+};
+
+
+//add employee
 async function addEmployee () {
     const managers = await obtainManagerNames();
     const roles = await obtainRoles();
@@ -118,8 +128,7 @@ async function addEmployee () {
             name: "manager",
             choices: [
                 ...managers, "null"
-            ]
-        }
+            ]}
     ])
 };
 
@@ -134,8 +143,7 @@ async function slashHire () {
             name: "employee",
             choices: [
                 ...employees, "null"
-            ]
-        }
+            ]}
     ]);
 };
 
@@ -151,22 +159,20 @@ async function updateEmployeeRole () {
             name: "employee",
             choices: [
                 ...roster
-            ]
-        },
+            ]},
         {
             type: "list",
             message: "Select employee's new role",
             name: "employee",
             choices: [
                 ...roles
-            ]
-        }
+            ]}
     ])
 };
-
 //add department
 async function addDepartment () {
-    return inquirer.prompt([
+    return inquirer
+    .prompt([
         {
             type: "input",
             message: "Enter new department name", 
@@ -175,11 +181,13 @@ async function addDepartment () {
     ])
 };
 
+
+
 //add role
 async function addRole () {
     const depts = await obtainDepartmentNames();
-    console.log(depts)
-    return inquirer.prompt ([
+    return inquirer
+    .prompt ([
         {
             type: "input",
             message: "Enter title of new role",
@@ -191,22 +199,16 @@ async function addRole () {
             name: "departmentName",
             choices: [
                 ...depts
-            ]
-        }
+            ]},
+        
+        {
+            type: "input",
+            message: "Enter title of new role",
+                name: "role"
+            },
+            console.table(depts)
     ])
 }
-
-//view all employees
-async function viewAllEmployees () {
-    const query = 'SELECT * FROM employee';
-    const rows = await connection.promise().query(query);
-    // console.table(rows)
-    console.table(rows[0]);
-    return Promise.resolve()
-    
-    ;}
-
-  
 
 //add role
 async function addRole (roleInformation) {
@@ -216,7 +218,7 @@ async function addRole (roleInformation) {
     const query = `INSERT into Role (role, salary, department_id) VALUES (?, ?, ?)`;
     const args = [role, salary, departmentId];
     await connection.promise().query(query, args);
-    console.table(rows[1]);
+    console.table(rows[0]);
     return Promise.resolve();
 };
 
@@ -228,18 +230,9 @@ async function updateEmployeeRole(info) {
     const query = `UPDATE employee SET role_id = ? WHERE employee.first_name = ? AND employee.last_name = ?`;
     const args = [roleId, employee[0], employee[1]];
     await connection.promise().query(query, args);
-    console.log(`updated ${employee[0]} ${employee[1]} with a new Role: ${info.role}`)
+    console.table(rows[0]);
+    return Promise.resolve()
 };
-
-//add department
-async function acquireDepartmentInfo (departmentInfo) {
-    const departmentName = departmentInfo.department.name;
-    const query = `INSER into Department (name) VALUES (?)`;
-    const args = [departmentName];
-    const rows = await connection.promise().query(query, args);
-    console.table(rows[0])
-    return Promise.resolve();
-}
 
 //get employee names
 async function acquireEmployeeRoster () {
@@ -250,11 +243,12 @@ async function acquireEmployeeRoster () {
         names.push(`${employee.first_name} ${employee.last_name}`);
     }
     console.table(rows[0])
-    return Promise.resolve();};
+    return Promise.resolve();
+};
 
 //view all departments
 async function viewAllDepartments () {
-    const query = `SELECT is AS 'ID', name AS 'Department' FROM department`;
+    const query = `SELECT is AS 'ID', name AS 'Department' FROM Department`;
     const rows = await connection.promise().query(query);
     // console.table(rows)
     console.table(rows[0])
@@ -278,7 +272,7 @@ async function viewAllRoles () {
 async function obtainAllRoles () {
     const query = `SELECT id AS 'ID', title AS 'Title', salary AS 'salary' FROM Role`;
     const rows = await connection.query(query);
-    console.table(rows)
+    console.table(rows[0])();
 };
 
 //get manager names
@@ -364,8 +358,8 @@ async function obtainDepartmentId (departmentName) {
 };
 
 //retrieve employee roster
-const employeeRoster = (name) => {
-    console.log(name)
-    let staff = name.split(' ');
-    return staff;
-};
+// const employeeRoster = (name) => {
+//     console.log(name)
+//     let staff = name.split(' ');
+//     return staff;
+// };
