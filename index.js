@@ -1,14 +1,13 @@
 const Sequelize = require("sequelize");
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
-const Ctable = require("console.table");
 
 //connect to db
 const connection = mysql.createConnection({
   user: "root",
   host: "localhost",
   PORT: 3306,
-  password: "root",
+  password: "Bernie2020",
   database: "management_db",
 });
 
@@ -38,8 +37,8 @@ inquirer
         ],
     })
 
-    .then((answer) => {
-        switch (answer.action) {
+    .then(async (answer) => {
+        switch (answer.action.toLowerCase()) {
 
         case "view all employees": {
             await viewAllEmployees();
@@ -54,11 +53,11 @@ inquirer
             break;}
 
         case "view all department": {
-            await obtainAllDepartments();
+            await viewAllDepartments();
             break;}
 
         case "view all roles": {
-            await obtainAllRoles();
+            await viewAllRoles();
             break;}
 
         case "add employee": {
@@ -127,7 +126,8 @@ async function addEmployee () {
 //delete employee
 async function slashHire () {
     const employees = await acquireEmployeeRoster();
-    return inquirer.prompt([
+    return inquirer
+    .prompt([
         {
             type: "list",
             message: "Select employee to hack.",
@@ -143,7 +143,8 @@ async function slashHire () {
 async function updateEmployeeRole () {
     const roster = await acquireEmployeeRoster();
     const roles = await obtainRoles();
-    return inquirer.prompt([
+    return inquirer
+    .prompt([
         {
             type: "list",
             message: "Select employee to update role",
@@ -197,65 +198,73 @@ async function addRole () {
 
 //view all employees
 async function viewAllEmployees () {
-    const query = 'SELECT * FROM employees';
-    const rows = await connection.query(query);
-    Ctable(rows);
-};
+    const query = 'SELECT * FROM employee';
+    const rows = await connection.promise().query(query);
+    // console.table(rows)
+    console.table(rows[0]);
+    return Promise.resolve()
+    
+    ;}
+
+  
 
 //add role
 async function addRole (roleInformation) {
     const departmentId = await obtainDepartmentId(roleInformation.departmentId);
     const salary = roleInformation.salary;
     const role = roleInformation.roleName;
-    const query = `INSERT into role (role, salary, department_id) VALUES (?, ?, ?)`;
+    const query = `INSERT into Role (role, salary, department_id) VALUES (?, ?, ?)`;
     const args = [role, salary, departmentId];
-    await connection.query(query, args);
-    console.log(`New role added successfully!`)
+    await connection.promise().query(query, args);
+    console.table(rows[1]);
+    return Promise.resolve();
 };
 
 //get employee names
-async function updateEmpRole(info) {
-    Ctable(info)
+async function updateEmployeeRole(info) {
+    console.table(info)
     const roleId = await obtainRoleId(info.role);
     const employee = employeeRoster(ingo.employee);
     const query = `UPDATE employee SET role_id = ? WHERE employee.first_name = ? AND employee.last_name = ?`;
     const args = [roleId, employee[0], employee[1]];
-    await connection.query(query, args);
-    console.log(`updated ${employee[0]} ${employee[1]} with a new role: ${info.role}`)
+    await connection.promise().query(query, args);
+    console.log(`updated ${employee[0]} ${employee[1]} with a new Role: ${info.role}`)
 };
 
 //add department
 async function acquireDepartmentInfo (departmentInfo) {
     const departmentName = departmentInfo.department.name;
-    const query = `INSER into department (name) VALUES (?)`;
+    const query = `INSER into Department (name) VALUES (?)`;
     const args = [departmentName];
-    const rows = await connection.query(query, args);
-    console.log(`${departmentName} added as new department.`)
+    const rows = await connection.promise().query(query, args);
+    console.table(rows[0])
+    return Promise.resolve();
 }
 
 //get employee names
 async function acquireEmployeeRoster () {
     const query = `SELECT * FROM employee`;
-    const rows = await connection.query(query);
+    const rows = await connection.promise().query(query);
     let name = [];
     for (const employee of rows) {
         names.push(`${employee.first_name} ${employee.last_name}`);
     }
-    return names
-};
-
+    console.table(rows[0])
+    return Promise.resolve();};
 
 //view all departments
-async function obtainAllDepartments () {
+async function viewAllDepartments () {
     const query = `SELECT is AS 'ID', name AS 'Department' FROM department`;
-    const rows = await connection.query(query);
-    Ctable(rows);
+    const rows = await connection.promise().query(query);
+    // console.table(rows)
+    console.table(rows[0])
+    return Promise.resolve();
 };
 
 //get roles
-async function obtainRoles () {
-    const query = `SELECT role FROM role`;
-    const rows = await connection.query(query);
+async function viewAllRoles () {
+    const query = `SELECT Role FROM Role`;
+    const rows = await connection.promise().query(query);
     let roles = [];
     console.log(roles)
     console.log(rows)
@@ -267,14 +276,14 @@ async function obtainRoles () {
 
 //view all roles
 async function obtainAllRoles () {
-    const query = `SELECT id AS 'ID', role AS 'Title', salary AS 'salary' FROM role`;
+    const query = `SELECT id AS 'ID', title AS 'Title', salary AS 'salary' FROM Role`;
     const rows = await connection.query(query);
-    Ctable(rows)
+    console.table(rows)
 };
 
 //get manager names
 async function obtainManagerNames () {
-    const query = `SELECT * FROM employee WHERE manager id IS NULL`;
+    const query = `SELECT * FROM employee WHERE Manager id IS NULL`;
     const rows = await connection.query(query);
     console.log(employee)
     console.log(employeeNames)
@@ -291,16 +300,16 @@ async function viewAllEmployeesDetails () {
     const query = `SELECT employee.id AS 'ID',
         first_name AS 'First Name',
         last_name AS 'Last Name',
-        role.role AS 'Title',
-        department.name AS 'Department',
+        Role.role AS 'Title',
+        Department.name AS 'Department',
         role_salary AS 'Salary',
         manager_id AS 'Manager ID',
-    FROM employee, role, department
+    FROM employee, role, Department
     WHERE employee.role_id = role.id
     AND role.department_id = department.id
     ORDER BY employee.id ASC`;
     const rows = await connection.query(query);
-    Ctable(rows)
+    console.table(rows[0])
 };
 
 //view all employees by department
@@ -308,17 +317,17 @@ async function obtainEmployeesByDepartment () {
     console.log('\n')
     const query = `SELECT first_name AS 'First Name',
         last_name AS 'Last Name',
-        department.name AS 'Departent Name' FROM
-        ((employee INNER JOIN role ON role_id = role.id)
-        INNER JOIN department ON department_id = department.id)
+        department.name AS 'Department Name' FROM
+        ((employee INNER JOIN Role ON role_id = role.id)
+        INNER JOIN Department ON department_id = department.id)
         ORDER BY employee.id ASC`;
         const rows = await connection.query(query);
-        Ctable(rows);
+        console.table(rows[0]);
 };
 
 //get department names
 async function obtainDepartmentNames () {
-    const query = `SELECT name FROM department`;
+    const query = `SELECT name FROM Department`;
     const rows = await connection.query(query);
     let departments = [];
     console.log(rows)
@@ -348,7 +357,7 @@ async function obtainEmployeeId (employeeName) {
 
 //get department by id
 async function obtainDepartmentId (departmentName) {
-    const query = `SELECT * FROM department WHERE department.name = ?`;
+    const query = `SELECT * FROM Department WHERE Department.name = ?`;
     const args = [departmentName];
     const rows = await connection.query(query, args);
     return rows[0].id

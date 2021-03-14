@@ -2,34 +2,29 @@ const Employee = require('./employee');
 const Role = require('./Role');
 const Department = require('./Department');
 
-Employee.hasOne(Department, {
-  foreignKey: 'employee_id',
-  onDelete: 'CASCADE',
+Role.belongsToMany(Department, {
+  // Define the third table needed to store the foreign keys
+  through: {
+    model: Department,
+    unique: false
+  },
+  // Define an alias for when data is retrieved
+  as: 'department_roles'
 });
 
-// An employee can have several roles
-Employee.hasMany(Role, {
-  foreignKey: 'employee_id',
-  onDelete: 'CASCADE',
-});
-
-// A book belongs to a single reader
-Role.belongsToMany(Employee, {
-  foreignKey: 'employee_id',
-});
-
- // A role belongs to a single department
-Role.hasOne(Department, {
-  foreignKey: 'department_id',
-});
-
-Department.hasMany(Role, {
-  foreignKey: 'role_id',
-});
-
-Department.hasMany(Employee, {
-  foreignKey: 'employee_id',
+Employee.belongsToMany(Role, {
+  // Define the third table needed to store the foreign keys
+  through: {
+    model: Department,
+    unique: false
+  },
+  // Define an alias for when data is retrieved
+  as: 'department_team'
 });
 
 
 module.exports = { Employee, Role, Department };
+
+
+
+
