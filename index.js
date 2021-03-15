@@ -11,11 +11,6 @@ const connection = mysql.createConnection({
   database: "management_db",
 });
 
-connection.connect((err) => {
-    if (err) throw err;
-    start();
-  });
-  
 const start = () => {   
 inquirer
     .prompt({
@@ -24,8 +19,6 @@ inquirer
         message: "What would you like to do?",
         choices: [
             "View All Employees",
-            "View All Employees by Department",
-            "View Details for All Employees",
             "View All Departments",
             "View All Roles",
             "Add Employee",
@@ -44,15 +37,7 @@ inquirer
             await viewAllEmployees();
             break;}
 
-        case "view all employees by department": {
-            await obtainEmployeesByDepartment();
-            break;}
-
-        case "view details for all employees": {
-            await viewAllEmployeesDetails();
-            break;}
-
-        case "view all department": {
+        case "view all departments": {
             await viewAllDepartments();
             break;}
 
@@ -181,8 +166,6 @@ async function addDepartment () {
     ])
 };
 
-
-
 //add role
 async function addRole () {
     const depts = await obtainDepartmentNames();
@@ -210,6 +193,22 @@ async function addRole () {
     ])
 }
 
+
+//view all roles
+async function viewAllRoles () {
+    const query = `SELECT * FROM role`;
+    const rows = await connection.promise().query(query);
+    console.table (rows[0]) 
+};
+
+//view all departments
+async function viewAllDepartments () {
+    const query = `SELECT * FROM department`;
+    const rows = await connection.promise().query(query);
+    // console.table(rows)
+    console.table(rows[0])
+    return Promise.resolve();
+};
 //add role
 async function addRole (roleInformation) {
     const departmentId = await obtainDepartmentId(roleInformation.departmentId);
@@ -222,144 +221,134 @@ async function addRole (roleInformation) {
     return Promise.resolve();
 };
 
-//get employee names
-async function updateEmployeeRole(info) {
-    console.table(info)
-    const roleId = await obtainRoleId(info.role);
-    const employee = employeeRoster(ingo.employee);
-    const query = `UPDATE employee SET role_id = ? WHERE employee.first_name = ? AND employee.last_name = ?`;
-    const args = [roleId, employee[0], employee[1]];
-    await connection.promise().query(query, args);
-    console.table(rows[0]);
-    return Promise.resolve()
-};
+connection.connect((err) => {
+    if (err) throw err;
+    start();
+  });
+
+
+        // case "view all employees by department": {
+        //     await obtainEmployeesByDepartment();
+        //     break;}
+
+        // case "view details for all employees": {
+        //     await viewAllEmployeesDetails();
+        //     break;}
+
+
+              // "View All Employees by Department",
+            // "View Details for All Employees",
+
+
+// //get employee names
+// async function updateEmployeeRole(info) {
+//     console.table(info)
+//     const roleId = await obtainRoleId(info.role);
+//     const employee = employeeRoster(ingo.employee);
+//     const query = `UPDATE employee SET role_id = ? WHERE employee.first_name = ? AND employee.last_name = ?`;
+//     const args = [roleId, employee[0], employee[1]];
+//     await connection.promise().query(query, args);
+//     console.table(rows[0]);
+//     return Promise.resolve()
+// };
+
 
 //get employee names
-async function acquireEmployeeRoster () {
-    const query = `SELECT * FROM employee`;
-    const rows = await connection.promise().query(query);
-    let name = [];
-    for (const employee of rows) {
-        names.push(`${employee.first_name} ${employee.last_name}`);
-    }
-    console.table(rows[0])
-    return Promise.resolve();
-};
+// async function acquireEmployeeRoster () {
+//     const query = `SELECT names FROM employee`;
+//     const rows = await connection.promise().query(query);
+//     let name = [];
+//     for (const employee of rows) {
+//         names.push(`${employee.first_name} ${employee.last_name}`);
+//     }
+//     console.table(rows[0])
+//     return Promise.resolve();
+// };
 
-//view all departments
-async function viewAllDepartments () {
-    const query = `SELECT is AS 'ID', name AS 'Department' FROM Department`;
-    const rows = await connection.promise().query(query);
-    // console.table(rows)
-    console.table(rows[0])
-    return Promise.resolve();
-};
-
-//get roles
-async function viewAllRoles () {
-    const query = `SELECT Role FROM Role`;
-    const rows = await connection.promise().query(query);
-    let roles = [];
-    console.log(roles)
-    console.log(rows)
-    for(const row of rows) {
-        roles.push(row.role)
-    }
-    return roles;
-};
-
-//view all roles
-async function obtainAllRoles () {
-    const query = `SELECT id AS 'ID', title AS 'Title', salary AS 'salary' FROM Role`;
-    const rows = await connection.query(query);
-    console.table(rows[0])();
-};
-
-//get manager names
-async function obtainManagerNames () {
-    const query = `SELECT * FROM employee WHERE Manager id IS NULL`;
-    const rows = await connection.query(query);
-    console.log(employee)
-    console.log(employeeNames)
-    let employeeNames = [];
-    for(const employee of rows) {
-        employeeNames.push(`${employee.first_name} ${employee.last_name}`)
-    }
-    return employeeNames
-};
-
-//view details for all employees
-async function viewAllEmployeesDetails () {
-    console.log('\n')
-    const query = `SELECT employee.id AS 'ID',
-        first_name AS 'First Name',
-        last_name AS 'Last Name',
-        Role.role AS 'Title',
-        Department.name AS 'Department',
-        role_salary AS 'Salary',
-        manager_id AS 'Manager ID',
-    FROM employee, role, Department
-    WHERE employee.role_id = role.id
-    AND role.department_id = department.id
-    ORDER BY employee.id ASC`;
-    const rows = await connection.query(query);
-    console.table(rows[0])
-};
 
 //view all employees by department
-async function obtainEmployeesByDepartment () {
-    console.log('\n')
-    const query = `SELECT first_name AS 'First Name',
-        last_name AS 'Last Name',
-        department.name AS 'Department Name' FROM
-        ((employee INNER JOIN Role ON role_id = role.id)
-        INNER JOIN Department ON department_id = department.id)
-        ORDER BY employee.id ASC`;
-        const rows = await connection.query(query);
-        console.table(rows[0]);
-};
+// async function obtainEmployeesByDepartment () {
+//     console.log('\n')
+//     const query = `SELECT first_name AS 'First Name',
+//         last_name AS 'Last Name',
+//         department.name AS 'Department Name' FROM
+//         ((employee INNER JOIN Role ON role_id = role.id)
+//         INNER JOIN Department ON department_id = department.id)
+//         ORDER BY employee.id ASC`;
+//         const rows = await connection.query(query);
+//         console.table(rows[0]);
+// };
 
 //get department names
-async function obtainDepartmentNames () {
-    const query = `SELECT name FROM Department`;
-    const rows = await connection.query(query);
-    let departments = [];
-    console.log(rows)
-    for (const row of rows) {
-        departments.push(row.name)
-    }
-    return departments
-};
-
+// async function obtainDepartmentNames () {
+//     const query = `SELECT name FROM Department`;
+//     const rows = await connection.query(query);
+//     let departments = [];
+//     console.log(rows)
+//     for (const row of rows) {
+//         departments.push(row.name)
+//     }
+//     console.table (departments[0])
+// };
 //get employee ID
-async function obtainEmployeeId (employeeName) {
-    if (employeeName === 'None') {
-        return null
-    }
-    const firstName = employeeName.split(' ')[0];
-    const lastName = employeeName.split(' ')[1];
-    const query = `SELECT id FROM employee WHERE first_name = ? AND last_name = ?`;
-    const rows = await connection.query(query, [firstName, lastName], (error, results) => {
-        if (error) {
-            console.log(error)
-            throw error
-        } else {
-            return rows[0].id
-        }
-    })
-};
+// async function obtainEmployeeId (employeeName) {
+//     if (employeeName === 'None') {
+//         return null
+//     }
+//     // const firstName = employeeName.split(' ')[0];
+//     // const lastName = employeeName.split(' ')[1];
+//     const query = `SELECT id FROM employee WHERE first_name = ? AND last_name = ?`;
+//     const rows = await connection.query(query, [firstName, lastName], (error, results) => {
+//         if (error) {
+//             console.log(error)
+//             throw error
+//         } else {
+//             console.table (rows[0])
+//         }
+//     })
+// };
 
 //get department by id
-async function obtainDepartmentId (departmentName) {
-    const query = `SELECT * FROM Department WHERE Department.name = ?`;
-    const args = [departmentName];
-    const rows = await connection.query(query, args);
-    return rows[0].id
-};
+// async function obtainDepartmentId (departmentId) {
+//     const query = `SELECT * FROM Department WHERE Department.id = ?`;
+//     const args = [departmentId];
+//     const rows = await connection.query(query, args);
+//     console.table (rows[0])
+// };
 
-//retrieve employee roster
+// retrieve employee roster
 // const employeeRoster = (name) => {
 //     console.log(name)
 //     let staff = name.split(' ');
 //     return staff;
 // };
+
+// //get manager names
+// async function obtainManagerNames () {
+//     const query = `SELECT * FROM employee WHERE Manager.id is NOT NULL`;
+//     const rows = await connection.query(query);
+//     let employeeNames = [];
+//     for(const employee of rows) {
+//         employeeNames.push(`${employee.first_name} ${employee.last_name}`)
+//     }
+//     console.table (employeeNames)
+// };
+
+//view details for all employees
+// async function viewAllEmployeesDetails () {
+//     console.log('\n')
+//     const query = `SELECT employee.id AS 'ID',
+//         first_name AS 'First Name',
+//         last_name AS 'Last Name',
+//         Role.role AS 'Title',
+//         Department.name AS 'Department',
+//         role_salary AS 'Salary',
+//         manager_id AS 'Manager ID',
+//     FROM employee, role, Department
+//     WHERE employee.role_id = role.id
+//     AND role.department_id = department.id
+//     ORDER BY employee.id ASC`;
+//     const rows = await connection.query(query);
+//     console.table(rows[0])
+// };
+
