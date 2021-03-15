@@ -1,8 +1,7 @@
 # Staff Tracker
 
 ## Description
-Generate an html page displaying the members of your team with their information. This app works on the command line and will ask the manager to submit their information then proceed to create their team.
-
+Access, add to, delete from and adjust various tables for a Staff Tracking system. Answer a series of questions to view, add, or adjust data from Employee, Role, and Department tables.
 
 
 ## Table of Contents
@@ -26,21 +25,14 @@ _________
 
 ## Screenshots
 
-![](src/staff_1.png)
+![](src/staffTracker.png)
 
-**Above:**  *This shot displays how the questions are presented and answered.*
-
-
-**Below:** *This is the finished product, placed into the project folder as a team.html file, placed in the folder named dist.*
-
-_________
-
-![](src/staff_2.png)
+**Above:**  *This shot displays how the tables are displayed in the CLI.*
 
 _________
 ## Instruction Video
 
-* https://drive.google.com/file/d/1zcHWeZ00kn3PKjUYUIFLswFjoM88LCCX/view
+* https://drive.google.com/file/d/1Y3kUrKVLLSWi9Vy37LdhAZ7cqrKvTVJo/view
 
 _________
 
