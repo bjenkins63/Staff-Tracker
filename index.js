@@ -11,11 +11,6 @@ const connection = mysql.createConnection({
   database: "management_db",
 });
 
-connection.connect((err) => {
-    if (err) throw err;
-    start();
-  });
-
 function start() {
     inquirer
         .prompt({
@@ -54,14 +49,14 @@ function start() {
                 }
 
                 case "add employee": {
-                    const newHire = await addEmployee();
+                    const newHire = await promptAddEmployee();
                     console.log(newHire);
                     await insertEmployee(newHire);
                     break;
                 }
 
                 case "remove employee": {
-                    const newHire = await ascquireSlashHireInfo();
+                    const slashHire = await SlashHire();
                     await slashHire(eject);
                     break;
                 }
@@ -79,7 +74,7 @@ function start() {
                 }
 
                 case "add role": {
-                    const newHire = await addRole();
+                    const newRole = await addRole();
                     await insertEmployee(roleAdd);
                     break;
                 }
@@ -100,11 +95,12 @@ async function viewAllEmployees () {
     const query = 'SELECT * FROM employee';
     const rows = await connection.promise().query(query);
     console.table(rows[0])
-    return Promise.resolve();
+    return Promise.resolve()
+    .then(start);
 };
 
 //add employee
-async function addEmployee () {
+async function promptAddEmployee () {
     return inquirer
     .prompt([
         {
@@ -128,22 +124,10 @@ async function addEmployee () {
             message: "Enter department manager ID"
         },
     ])
+    .then(start);
+    
 };
 
-//delete employee
-async function slashHire () {
-    const employees = await acquireEmployeeRoster();
-    return inquirer
-    .prompt([
-        {
-            type: "list",
-            message: "Select employee to hack.",
-            name: "employee",
-            choices: [
-                ...employees, "null"
-            ]}
-    ]);
-};
 
 //update employee role
 async function updateEmployeeRole () {
@@ -163,8 +147,36 @@ async function updateEmployeeRole () {
             choices: [
                 ...roles
             ]},
+            
  ]);
 }
+
+//delete employee
+async function slashHire () {
+    const employees = await acquireEmployeeRoster();
+    return inquirer
+    .prompt([
+        {
+            type: "list",
+            message: "Select employee to hack.",
+            name: "employee",
+            choices: [
+                ...employees, "null"
+            ]}
+            .then.viewAllEmployees()
+    ]);
+};
+
+//view all departments
+async function viewAllDepartments () {
+    const query = `SELECT * FROM department`;
+    const rows = await connection.promise().query(query);
+    // console.table(rows)
+    console.table(rows[0])
+    return Promise.resolve()
+    .then(start);
+
+};
 
 //add department
 async function addDepartment () {
@@ -176,6 +188,16 @@ async function addDepartment () {
             name: "departmentName"
         }
     ])
+};
+
+//view all roles
+async function viewAllRoles () {
+    const query = `SELECT * FROM role`;
+    const rows = await connection.promise().query(query);
+    console.table (rows[0]) 
+    return Promise.resolve()
+    .then(start);
+
 };
 
 //add role
@@ -199,24 +221,10 @@ async function addRole () {
             name: "departmentName",
             choices: [
                 ...depts
-            ]},
+            ]}
+            .then(start)
+
     ])
-};
-
-//view all roles
-async function viewAllRoles () {
-    const query = `SELECT * FROM role`;
-    const rows = await connection.promise().query(query);
-    console.table (rows[0]) 
-};
-
-//view all departments
-async function viewAllDepartments () {
-    const query = `SELECT * FROM department`;
-    const rows = await connection.promise().query(query);
-    // console.table(rows)
-    console.table(rows[0])
-    return Promise.resolve();
 };
 
 //add role
@@ -228,7 +236,12 @@ async function addRole (roleInformation) {
     const args = [role, salary, departmentId];
     await connection.promise().query(query, args);
     console.table(rows[0]);
-    return Promise.resolve();
+    return Promise.resolve()
+    .then(start);
+
 }
 
-
+connection.connect((err) => {
+    if (err) throw err;
+    start();
+  });
